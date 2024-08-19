@@ -31,7 +31,6 @@ vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
 -- Fold
-
 vim.wo.foldmethod = "indent"
 vim.wo.foldenable = false
 
@@ -40,6 +39,8 @@ vim.api.nvim_set_keymap('n', 'df', 'gg"_dG', { noremap = true, silent = true })
 
 -- Save file
 vim.api.nvim_set_keymap('n', '<C-s>', ':w<CR>', { noremap = true, silent = true })
+
+-- Open split
 
 -- Copy line to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { noremap = true, silent = true }) -- Yank to the system clipboard ("+y)
@@ -54,6 +55,10 @@ vim.keymap.set({ "n", "v" }, "<A-k>", [[:m '>-2<CR>gv=gv]])
 
 -- Change Directory
 vim.keymap.set('n', '<A-c>', ':cd %:p:h<CR>:pwd<CR>', { noremap = true, silent = false })
+
+-- Splits
+-- <leader>sf <C-v> Opens file in :vs from the fuzzy selector
+-- <leader>sf <C-x> Opens file in :s from the fuzzy selector
 
 if vim.g.neovide then
   vim.opt.guifont = "Maple Mono NF:h10"
@@ -149,6 +154,19 @@ require("lazy").setup({
     "Shatur/neovim-ayu",
     lazy = false,
     priority = 1000,
+    opts = {
+      overrides = {
+        Normal = { bg = "None" },
+        ColorColumn = { bg = "None" },
+        SignColumn = { bg = "None" },
+        Folded = { bg = "None" },
+        FoldColumn = { bg = "None" },
+        CursorLine = { bg = "None" },
+        CursorColumn = { bg = "None" },
+        WhichKeyFloat = { bg = "None" },
+        VertSplit = { bg = "None" },
+      },
+    },
     config = function()
       vim.cmd([[colorscheme ayu]])
       vim.g.ayucolor = "dark"
@@ -267,10 +285,10 @@ require("lazy").setup({
     end,
   },
 
-  {                     -- Useful plugin to show you pending keybinds.
+  {
     "folke/which-key.nvim",
     event = "VimEnter", -- Sets the loading event to 'VimEnter'
-    config = function() -- This is the function that runs, AFTER loading
+    config = function()
       require("which-key").setup()
 
       require("which-key").register({
@@ -282,7 +300,6 @@ require("lazy").setup({
         ["<leader>t"] = { name = "[T]rouble", _ = "which_key_ignore" },
         ["<leader>g"] = { name = "[G]it Hunk", _ = "which_key_ignore" },
       })
-      -- visual mode
       require("which-key").register({
         ["<leader>g"] = { "[G]it Hunk" },
       }, { mode = "v" })
@@ -309,6 +326,9 @@ require("lazy").setup({
     config = function()
       require("telescope").setup({
         defaults = {
+          layout_config = {
+            vertical = { height = 0.5 },
+          },
           mappings = {
             i = {
               ["<C-u>"] = false,
@@ -346,11 +366,8 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
-      vim.keymap.set("n", "<leader>/", function()
-        builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-          previewer = false,
-        }))
-      end, { desc = "[/] Fuzzily search in current buffer" })
+      vim.keymap.set("n", "<leader>/", builtin.current_buffer_fuzzy_find,
+        { desc = "[/] Fuzzily search in current buffer" })
 
       vim.keymap.set("n", "<leader>s/", function()
         builtin.live_grep({
