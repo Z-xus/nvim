@@ -5,7 +5,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
 vim.opt.showmode = false
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 vim.opt.breakindent = true
 vim.opt.undofile = true
 vim.opt.ignorecase = true
@@ -17,8 +17,12 @@ vim.o.termguicolors = true
 vim.opt.colorcolumn = nil
 
 -- Tabs
-vim.o.tabstop = 4
--- vim.o.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+vim.opt.smarttab = true
+vim.opt.smartindent = true
 
 -- Undo
 vim.opt.swapfile = false
@@ -30,6 +34,26 @@ vim.opt.undofile = true
 
 vim.wo.foldmethod = "indent"
 vim.wo.foldenable = false
+
+-- Delete file content
+vim.api.nvim_set_keymap('n', 'df', 'gg"_dG', { noremap = true, silent = true })
+
+-- Save file
+vim.api.nvim_set_keymap('n', '<C-s>', ':w<CR>', { noremap = true, silent = true })
+
+-- Copy line to system clipboard
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { noremap = true, silent = true }) -- Yank to the system clipboard ("+y)
+vim.keymap.set("n", "<leader>Y", [["+Y]], { noremap = true, silent = true })          -- Yank line to system clipboard
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = true }) -- Delete line to system clipboard
+vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true })        -- Paste on new line below
+vim.keymap.set("n", "ya", [[gg"+yG<C-o>zz]], { noremap = true, silent = true })       -- Yank full file to system clipboard
+
+-- Move line
+vim.keymap.set({ "n", "v" }, "<A-j>", [[:m '>+1<CR>gv=gv]])
+vim.keymap.set({ "n", "v" }, "<A-k>", [[:m '>-2<CR>gv=gv]])
+
+-- Change Directory
+vim.keymap.set('n', '<A-c>', ':cd %:p:h<CR>:pwd<CR>', { noremap = true, silent = false })
 
 if vim.g.neovide then
   vim.opt.guifont = "Maple Mono NF:h10"
@@ -63,18 +87,11 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 vim.opt.list = true
 vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
--- vim.opt.listchars = { trail = "·", nbsp = "␣", tab = "▏ ", leadmultispace = "▏ " }
--- vim.opt.listchars = { trail = "·", nbsp = "␣", }
--- vim.opt.listchars.nbsp = "␣"
--- vim.opt.listchars.tab = "▏ "
--- vim.opt.listchars:append({ trail = "·", nbsp = "␣", tab = "▏ ", leadmultispace = "▏ " })
--- vim.opt.listchars:append({ trail = "·", nbsp = "␣", })
--- vim.opt.listchars["trail"] = "·#"
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 vim.opt.cursorline = true
-vim.opt.scrolloff = 6
+vim.opt.scrolloff = 8
 
 -- Centered navigation
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
@@ -113,47 +130,118 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   -- Detect tabstop and shiftwidth automatically
-  "tpope/vim-sleuth",
+  { "tpope/vim-sleuth" },
 
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  -- Use treesitter to auto close and auto rename html tag (Can't find anything better at the moment)
+  { "windwp/nvim-ts-autotag", opts = {} },
 
-  { "numToStr/Comment.nvim",               opts = {} },
+  -- Color schemes
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme("tokyonight-night")
+  --   end,
+  -- },
 
-  { "github/copilot.vim" },
+  {
+    "Shatur/neovim-ayu",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd([[colorscheme ayu]])
+      vim.g.ayucolor = "dark"
+    end,
+  },
 
+  -- { "ThePrimeagen/vim-be-good" },
+
+  -- { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    ---@module "ibl"
+    ---@type ibl.config
+    opts = {},
+  },
+
+  { "numToStr/Comment.nvim",  opts = {} },
+
+  -- no more skill issues
+  -- { "github/copilot.vim" },
+
+  -- TODO: add something like this
   -- { "MeanderingProgrammer/markdown.nvim",  opts = {} },
 
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    "lewis6991/gitsigns.nvim",
-    opts = {},
+    "lewis6991/gitsigns.nvim", opts = {},
   },
 
   {
     "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {},
-    config = function()
-      -- Configure Trouble
-      vim.keymap.set("n", "<leader>tt", function()
-        require("trouble").toggle()
-      end, { desc = "Toggle Trouble" })
-      vim.keymap.set("n", "<leader>tw", function()
-        require("trouble").toggle("workspace_diagnostics")
-      end, { desc = "Toggle Workspace Diagnostics" })
-      vim.keymap.set("n", "<leader>td", function()
-        require("trouble").toggle("document_diagnostics")
-      end, { desc = "Toggle Document Diagnostics" })
-      vim.keymap.set("n", "<leader>tq", function()
-        require("trouble").toggle("quickfix")
-      end, { desc = "Toggle Quickfix" })
-      vim.keymap.set("n", "<leader>tl", function()
-        require("trouble").toggle("loclist")
-      end, { desc = "Toggle Location List" })
-      vim.keymap.set("n", "gR", function()
-        require("trouble").toggle("lsp_references")
-      end, { desc = "Toggle LSP References" })
-    end,
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    },
   },
+
+  -- {
+  --   "folke/trouble.nvim",
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   opts = {},
+  --   config = function()
+  --     -- Configure Trouble
+  --     vim.keymap.set("n", "<leader>tt", function()
+  --       require("trouble").toggle()
+  --     end, { desc = "Toggle Trouble" })
+  --     vim.keymap.set("n", "<leader>tw", function()
+  --       require("trouble").toggle("workspace_diagnostics")
+  --     end, { desc = "Toggle Workspace Diagnostics" })
+  --     vim.keymap.set("n", "<leader>td", function()
+  --       require("trouble").toggle("document_diagnostics")
+  --     end, { desc = "Toggle Document Diagnostics" })
+  --     vim.keymap.set("n", "<leader>tq", function()
+  --       require("trouble").toggle("quickfix")
+  --     end, { desc = "Toggle Quickfix" })
+  --     vim.keymap.set("n", "<leader>tl", function()
+  --       require("trouble").toggle("loclist")
+  --     end, { desc = "Toggle Location List" })
+  --     vim.keymap.set("n", "gR", function()
+  --       require("trouble").toggle("lsp_references")
+  --     end, { desc = "Toggle LSP References" })
+  --   end,
+  -- },
 
   {
     "christoomey/vim-tmux-navigator",
@@ -427,7 +515,8 @@ require("lazy").setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = {}
+        -- local disable_filetypes = { c = true, cpp = true }
         return {
           timeout_ms = 500,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -440,7 +529,7 @@ require("lazy").setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { "prettierd", "prettier" } },
       },
     },
   },
@@ -505,7 +594,7 @@ require("lazy").setup({
         --
         -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert({
-          -- Select the [n]ext item
+          -- Select the u[n]uext item
           ["<C-n>"] = cmp.mapping.select_next_item(),
           -- Select the [p]revious item
           ["<C-p>"] = cmp.mapping.select_prev_item(),
@@ -517,7 +606,8 @@ require("lazy").setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+          -- ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+          ["<tab>"] = cmp.mapping.confirm({ select = true }),
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -558,16 +648,6 @@ require("lazy").setup({
     end,
   },
 
-  {
-    "folke/tokyonight.nvim",
-    priority = 1000,
-    init = function()
-      vim.cmd.colorscheme("tokyonight-night")
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi("Comment gui=none")
-    end,
-  },
 
   -- Highlight todo, notes, etc in comments
   {
@@ -578,40 +658,21 @@ require("lazy").setup({
   },
 
   {
-    -- Collection of various small independent plugins/modules
-    "echasnovski/mini.nvim",
-    config = function()
-      -- Better Around/Inside textobjects
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [']quote
-      --  - ci'  - [C]hange [I]nside [']quote
-      require("mini.ai").setup({ n_lines = 500 })
-
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require("mini.surround").setup()
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require("mini.statusline")
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup({ use_icons = vim.g.have_nerd_font })
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return "%2l:%-2v"
-      end
-    end,
+    "nvim-lualine/lualine.nvim",
+    opts = {
+      options = {
+        theme = 'ayu'
+      }
+    }
   },
+
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    opts = {}
+  },
+
   {
     -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
