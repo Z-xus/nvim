@@ -40,6 +40,8 @@ vim.api.nvim_set_keymap('n', 'df', 'gg"_dG', { noremap = true, silent = true })
 -- Save file
 vim.api.nvim_set_keymap('n', '<C-s>', ':w<CR>', { noremap = true, silent = true })
 
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
 -- Open split
 
 -- Copy line to system clipboard
@@ -131,6 +133,34 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+local cmp_kinds = {
+  Text = '  ',
+  Method = '  ',
+  Function = '  ',
+  Constructor = '  ',
+  Field = '  ',
+  Variable = '  ',
+  Class = '  ',
+  Interface = '  ',
+  Module = '  ',
+  Property = '  ',
+  Unit = '  ',
+  Value = '  ',
+  Enum = '  ',
+  Keyword = '  ',
+  Snippet = '  ',
+  Color = '  ',
+  File = '  ',
+  Reference = '  ',
+  Folder = '  ',
+  EnumMember = '  ',
+  Constant = '  ',
+  Struct = '  ',
+  Event = '  ',
+  Operator = '  ',
+  TypeParameter = '  ',
+}
+
 -- [[ Configure and install plugins ]]
 
 require("lazy").setup({
@@ -147,6 +177,38 @@ require("lazy").setup({
   --   priority = 1000,
   --   config = function()
   --     vim.cmd.colorscheme("tokyonight-night")
+  --   end,
+  -- },
+
+  -- {
+  --   "catppuccin/nvim",
+  --   name = "catppuccin",
+  --   priority = 1000,
+  --   opts = {
+  --     term_colors = true,
+  --     -- transparent_background = true,
+  --     integrations = {
+  --       cmp = true,
+  --       gitsigns = true,
+  --       treesitter = true,
+  --       harpoon = true,
+  --       telescope = true,
+  --       mason = true,
+  --       noice = true,
+  --       notify = true,
+  --       which_key = true,
+  --       fidget = true,
+  --       native_lsp = {
+  --         enabled = true,
+  --         inlay_hints = {
+  --           background = true,
+  --         },
+  --       },
+  --     },
+  --   },
+  --   config = function(_, opts)
+  --     require("catppuccin").setup(opts)
+  --     vim.cmd.colorscheme("catppuccin-mocha")
   --   end,
   -- },
 
@@ -175,7 +237,6 @@ require("lazy").setup({
 
   -- { "ThePrimeagen/vim-be-good" },
 
-  -- { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
@@ -311,7 +372,7 @@ require("lazy").setup({
     event = "VimEnter",
     branch = "0.1.x",
     dependencies = {
-      "nvim-lua/plenary.nvim",
+      { "nvim-lua/plenary.nvim" },
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
@@ -320,7 +381,6 @@ require("lazy").setup({
         end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
-
       { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
     },
     config = function()
@@ -488,7 +548,6 @@ require("lazy").setup({
               completion = {
                 callSnippet = "Replace",
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
             },
           },
@@ -541,25 +600,16 @@ require("lazy").setup({
       end,
       formatters_by_ft = {
         lua = { "stylua" },
-        -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
-        --
-        -- You can use a sub-list to tell conform to run *until* a formatter
-        -- is found.
         javascript = { { "prettierd", "prettier" } },
       },
     },
   },
 
-  { -- Autocompletion
+  {
+    -- Autocompletion
     "hrsh7th/nvim-cmp",
-    opts = {
-      window = {
-        completion = {
-          border = "rounded",
-        },
-      },
-    },
+    lazy = false,
     event = "InsertEnter",
     dependencies = {
       {
@@ -599,6 +649,39 @@ require("lazy").setup({
       luasnip.config.setup({})
 
       cmp.setup({
+
+        window = {
+          documentation = {
+            border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+            winhighlight = "Normal:CmpPmenu,FloatBorder:CmpBorder,CursorLine:PmenuSel,Search:None",
+          },
+
+          completion = {
+            border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+            winhighlight = "Normal:CmpPmenu,FloatBorder:CmpBorder,CursorLine:PmenuSel,Search:None",
+            -- winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+            col_offset = -3,
+            side_padding = 0,
+          },
+        },
+
+        formatting = {
+          fields = { "kind", "abbr", "menu" },
+          format = function(_, vim_item)
+            -- vim_item.kind = (cmp_kinds[vim_item.kind] or '') .. vim_item.kind
+
+            -- Get the symbol and description from the cmp_kinds table
+            local kind_symbol = cmp_kinds[vim_item.kind] or ""
+            local kind_text = vim_item.kind
+
+            -- Format the kind field
+            vim_item.kind = " " .. kind_symbol .. kind_text .. " "
+
+            -- Format the menu field similarly
+            vim_item.menu = "    (" .. kind_text .. ")"
+            return vim_item
+          end,
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -663,7 +746,8 @@ require("lazy").setup({
         },
       })
     end,
-  },
+  }
+  ,
 
 
   -- Highlight todo, notes, etc in comments

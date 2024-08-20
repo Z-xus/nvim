@@ -16,7 +16,9 @@ return {
 	opts = {
 		close_if_last_window = true,
 		filesystem = {
+			hijack_netrw_behavior = "open_default",
 			window = {
+				-- position = "current",
 				width = 30,
 				mappings = {
 					["\\"] = "close_window",
