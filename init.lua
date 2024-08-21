@@ -144,73 +144,42 @@ require("lazy").setup({
   { "windwp/nvim-ts-autotag", opts = {} },
 
   -- Color schemes
-  -- {
-  --   "folke/tokyonight.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme("tokyonight-night")
-  --   end,
-  -- },
-
-  -- {
-  --   "catppuccin/nvim",
-  --   name = "catppuccin",
-  --   priority = 1000,
-  --   opts = {
-  --     term_colors = true,
-  --     -- transparent_background = true,
-  --     integrations = {
-  --       cmp = true,
-  --       gitsigns = true,
-  --       treesitter = true,
-  --       harpoon = true,
-  --       telescope = true,
-  --       mason = true,
-  --       noice = true,
-  --       notify = true,
-  --       which_key = true,
-  --       fidget = true,
-  --       native_lsp = {
-  --         enabled = true,
-  --         inlay_hints = {
-  --           background = true,
-  --         },
-  --       },
-  --     },
-  --   },
-  --   config = function(_, opts)
-  --     require("catppuccin").setup(opts)
-  --     vim.cmd.colorscheme("catppuccin-mocha")
-  --   end,
-  -- },
-
   {
-    "Shatur/neovim-ayu",
+    "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    opts = {
-      overrides = {
-        Normal = { bg = "None" },
-        ColorColumn = { bg = "None" },
-        SignColumn = { bg = "None" },
-        Folded = { bg = "None" },
-        FoldColumn = { bg = "None" },
-        CursorLine = { bg = "None" },
-        CursorColumn = { bg = "None" },
-        WhichKeyFloat = { bg = "None" },
-        VertSplit = { bg = "None" },
-      },
-    },
     config = function()
-      vim.cmd([[colorscheme ayu]])
-      vim.g.ayucolor = "dark"
+      vim.cmd.colorscheme("tokyonight-night")
     end,
   },
+
+  -- {
+  --   "Shatur/neovim-ayu",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {
+  --     overrides = {
+  --       Normal = { bg = "None" },
+  --       ColorColumn = { bg = "None" },
+  --       SignColumn = { bg = "None" },
+  --       Folded = { bg = "None" },
+  --       FoldColumn = { bg = "None" },
+  --       CursorLine = { bg = "None" },
+  --       CursorColumn = { bg = "None" },
+  --       WhichKeyFloat = { bg = "None" },
+  --       VertSplit = { bg = "None" },
+  --     },
+  --   },
+  --   config = function()
+  --     vim.cmd([[colorscheme ayu]])
+  --     vim.g.ayucolor = "dark"
+  --   end,
+  -- },
 
   -- { "ThePrimeagen/vim-be-good" },
 
   {
+    -- Line indent markers
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     ---@module "ibl"
@@ -226,8 +195,10 @@ require("lazy").setup({
   -- TODO: add something like this
   -- { "MeanderingProgrammer/markdown.nvim",  opts = {} },
 
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    "lewis6991/gitsigns.nvim", opts = {},
+  {
+    -- Adds git related signs to the gutter, as well as utilities for managing changes
+    "lewis6991/gitsigns.nvim",
+    opts = {},
   },
 
   {
@@ -267,33 +238,6 @@ require("lazy").setup({
       },
     },
   },
-
-  -- {
-  --   "folke/trouble.nvim",
-  --   dependencies = { "nvim-tree/nvim-web-devicons" },
-  --   opts = {},
-  --   config = function()
-  --     -- Configure Trouble
-  --     vim.keymap.set("n", "<leader>tt", function()
-  --       require("trouble").toggle()
-  --     end, { desc = "Toggle Trouble" })
-  --     vim.keymap.set("n", "<leader>tw", function()
-  --       require("trouble").toggle("workspace_diagnostics")
-  --     end, { desc = "Toggle Workspace Diagnostics" })
-  --     vim.keymap.set("n", "<leader>td", function()
-  --       require("trouble").toggle("document_diagnostics")
-  --     end, { desc = "Toggle Document Diagnostics" })
-  --     vim.keymap.set("n", "<leader>tq", function()
-  --       require("trouble").toggle("quickfix")
-  --     end, { desc = "Toggle Quickfix" })
-  --     vim.keymap.set("n", "<leader>tl", function()
-  --       require("trouble").toggle("loclist")
-  --     end, { desc = "Toggle Location List" })
-  --     vim.keymap.set("n", "gR", function()
-  --       require("trouble").toggle("lsp_references")
-  --     end, { desc = "Toggle LSP References" })
-  --   end,
-  -- },
 
   {
     "christoomey/vim-tmux-navigator",
@@ -386,7 +330,6 @@ require("lazy").setup({
       pcall(require("telescope").load_extension, "fzf")
       pcall(require("telescope").load_extension, "ui-select")
 
-      -- See `:help telescope.builtin`
       local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
       vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
@@ -591,7 +534,9 @@ require("lazy").setup({
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {
-        theme = 'ayu'
+        theme = 'auto',
+        section_separators = { left = '', right = '' },
+        component_separators = { left = '', right = '' }
       }
     }
   },
@@ -616,6 +561,15 @@ require("lazy").setup({
       },
       indent = { enable = true, disable = { "ruby" } },
 
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-n>", -- set to `false` to disable one of the mappings
+          node_incremental = "-",
+          scope_incremental = "+",
+          node_decremental = "*",
+        },
+      },
       -- textobjects
       textobjects = {
         -- select objects
@@ -688,6 +642,20 @@ require("lazy").setup({
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
+  },
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    opts = {
+      enable = true,
+      line_numbers = true,
+      multiline_threshold = 8,
+      trim_scope = 'outer',
+      mode = 'cursor',
+      separator = nil,
+      zindex = 20,
+      on_attach = nil,
+    }
   },
 
   -- require 'kickstart.plugins.lint',
