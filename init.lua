@@ -16,7 +16,7 @@ vim.opt.inccommand = "split"
 vim.o.termguicolors = true
 vim.opt.colorcolumn = nil
 
--- Tabs
+-- tabs
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
@@ -123,7 +123,7 @@ vim.api.nvim_set_hl(0, "YankNormal", { bg = "#C8A1E0", fg = "#674188" })    -- P
 -- Function to highlight yank based on clipboard usage
 local function highlight_yank()
   if vim.v.event.regname == "+" then
-    vim.highlight.on_yank({ higroup = "YankClipboard", timeout = 300 })
+    vim.highlight.on_yank({ higroup = "YankClipboard", timeout = 200 })
   else
     vim.highlight.on_yank({ higroup = "YankNormal", timeout = 200 })
   end
