@@ -116,14 +116,26 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- [[ Basic Autocommands ]]
 
--- Highlight when yanking (copying) text
+vim.api.nvim_set_hl(0, "YankClipboard", { bg = "#95D2B3", fg = "#1A5319" }) -- Green
+vim.api.nvim_set_hl(0, "YankNormal", { bg = "#C8A1E0", fg = "#674188" })    -- Purple
+
+
+-- Function to highlight yank based on clipboard usage
+local function highlight_yank()
+  if vim.v.event.regname == "+" then
+    vim.highlight.on_yank({ higroup = "YankClipboard", timeout = 300 })
+  else
+    vim.highlight.on_yank({ higroup = "YankNormal", timeout = 200 })
+  end
+end
+
+-- Define the yank autocmd
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copying) text",
-  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+  group = vim.api.nvim_create_augroup("custom-highlight-yank", { clear = true }),
+  callback = highlight_yank,
 })
+
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
