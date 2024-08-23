@@ -215,7 +215,7 @@ require("lazy").setup({
     opts = {},
   },
 
-  { "numToStr/Comment.nvim",                       opts = {} },
+  { "numToStr/Comment.nvim" },
 
   -- no more skill issues
   -- { "github/copilot.vim" },
@@ -387,14 +387,15 @@ require("lazy").setup({
 
   { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
+
     dependencies = {
       { "williamboman/mason.nvim", config = true },
       "williamboman/mason-lspconfig.nvim",
       "WhoIsSethDaniel/mason-tool-installer.nvim",
-
       { "j-hui/fidget.nvim",       opts = {} },
       { "folke/neodev.nvim",       opts = {} },
     },
+
     config = function()
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -457,12 +458,6 @@ require("lazy").setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-      --  Add any additional override configuration in the following tables. Available keys are:
-      --  - cmd (table): Override the default command used to start the server
-      --  - filetypes (table): Override the default list of associated filetypes for the server
-      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-      --  - settings (table): Override the default settings passed when initializing the server.
-      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {
           cmd = {
@@ -478,19 +473,12 @@ require("lazy").setup({
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        --
 
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes = { ...},
-          -- capabilities = {},
-          settings = {
+          -- cmd = {...}, Override the default command used to start the server
+          -- filetypes = { ...}, Override the default list of associated filetypes for the server
+          -- capabilities = {}, Override fields in capabilities. Can be used to disable certain LSP features.
+          settings = { -- Override the default settings passed when initializing the server.
             Lua = {
               completion = {
                 callSnippet = "Replace",
@@ -511,9 +499,7 @@ require("lazy").setup({
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
+            -- for disabling certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
             require("lspconfig")[server_name].setup(server)
           end,
@@ -547,7 +533,7 @@ require("lazy").setup({
       end,
       formatters_by_ft = {
         lua = { "stylua" },
-        -- python = { "isort", "black" },
+        python = { "isort", "black" },
         javascript = { { "prettierd", "prettier" } },
       },
     },
@@ -596,7 +582,7 @@ require("lazy").setup({
       indent = { enable = true, disable = { "ruby" } },
 
       incremental_selection = {
-        enable = true,
+        enable = false,
         keymaps = {
           init_selection = false, -- set to `false` to disable one of the mappings
           node_incremental = false,
@@ -647,7 +633,7 @@ require("lazy").setup({
             ["]]"] = { query = "@class.outer", desc = "Next class start" },
             --
             -- You can use regex matching (i.e. lua pattern) and/or pass a list in a "query" key to group multiple queires.
-            ["]o"] = "@loop.*",
+            ["]l"] = "@loop.*",
             -- ["]o"] = { query = { "@loop.inner", "@loop.outer" } }
             --
             -- You can pass a query group to use query from `queries/<lang>/<query_group>.scm file in your runtime path.
@@ -699,7 +685,7 @@ require("lazy").setup({
         { noremap = true, desc = 'Toggle [C]ode [C]ontext' })
 
       -- Get the current highlight properties of 'CursorLine'
-      local cursorline_hl = vim.api.nvim_get_hl_by_name('CursorLine', true)
+      local cursorline_hl = vim.api.nvim_get_hl(0, { name = 'CursorLine', link = false })
 
       -- Apply the same properties to 'TreesitterContext'
       vim.api.nvim_set_hl(0, 'TreesitterContext', cursorline_hl)
