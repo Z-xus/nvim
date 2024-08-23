@@ -116,8 +116,10 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- [[ Basic Autocommands ]]
 
-vim.api.nvim_set_hl(0, "YankClipboard", { bg = "#95D2B3", fg = "#1A5319" }) -- Green
-vim.api.nvim_set_hl(0, "YankNormal", { bg = "#C8A1E0", fg = "#674188" })    -- Purple
+vim.api.nvim_set_hl(0, "YankNormal", { bg = "#A6B1E1", fg = "#424874" })    -- Blue
+vim.api.nvim_set_hl(0, "YankClipboard", { bg = "#BBDED6", fg = "#1A5319" }) -- Green
+-- vim.api.nvim_set_hl(0, "YankClipboard", { bg = "#95D2B3", fg = "#1A5319" }) -- Green
+-- vim.api.nvim_set_hl(0, "YankNormal", { bg = "#C8A1E0", fg = "#674188" })    -- Purple
 
 
 -- Function to highlight yank based on clipboard usage
@@ -156,14 +158,28 @@ require("lazy").setup({
   { "windwp/nvim-ts-autotag", opts = {} },
 
   -- Color schemes
+
   {
-    "folke/tokyonight.nvim",
-    lazy = false,
+    -- Theme inspired by Atom
+    'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme("tokyonight-night")
+      vim.cmd.colorscheme 'onedark'
+      -- Lua
+      require('onedark').setup {
+        style = 'deep'
+      }
+      require('onedark').load()
     end,
   },
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme("tokyonight-night")
+  --   end,
+  -- },
 
   -- {
   --   "Shatur/neovim-ayu",
@@ -548,7 +564,10 @@ require("lazy").setup({
       options = {
         theme = 'auto',
         section_separators = { left = '', right = '' },
-        component_separators = { left = '', right = '' }
+        component_separators = { left = '', right = '' },
+      },
+      extensions = {
+        'neo-tree',
       }
     }
   },
