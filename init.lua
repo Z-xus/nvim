@@ -598,10 +598,10 @@ require("lazy").setup({
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "<C-n>", -- set to `false` to disable one of the mappings
-          node_incremental = "-",
-          scope_incremental = "+",
-          node_decremental = "*",
+          init_selection = false, -- set to `false` to disable one of the mappings
+          node_incremental = false,
+          scope_incremental = false,
+          node_decremental = false,
         },
       },
       -- textobjects
@@ -614,6 +614,8 @@ require("lazy").setup({
             ["af"] = "@function.outer",
             ["if"] = "@function.inner",
             ["ac"] = "@class.outer",
+            ["am"] = "@parameter.outer",
+            ["im"] = "@parameter.inner",
             ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
             ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
           },
@@ -695,6 +697,12 @@ require("lazy").setup({
     config = function()
       vim.api.nvim_set_keymap('n', '<leader>cc', '<cmd>TSContextToggle<CR>',
         { noremap = true, desc = 'Toggle [C]ode [C]ontext' })
+
+      -- Get the current highlight properties of 'CursorLine'
+      local cursorline_hl = vim.api.nvim_get_hl_by_name('CursorLine', true)
+
+      -- Apply the same properties to 'TreesitterContext'
+      vim.api.nvim_set_hl(0, 'TreesitterContext', cursorline_hl)
     end
   },
 
