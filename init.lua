@@ -46,6 +46,7 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.api.nvim_create_user_command('W', 'w', {})
 vim.api.nvim_create_user_command('Q', 'q', {})
 
+vim.api.nvim_set_keymap('n', '<leader>m', '<cmd>Mason<CR>', { noremap = true, silent = true })
 
 -- Open split
 
@@ -214,7 +215,7 @@ require("lazy").setup({
     opts = {},
   },
 
-  { "numToStr/Comment.nvim",  opts = {} },
+  { "numToStr/Comment.nvim",                       opts = {} },
 
   -- no more skill issues
   -- { "github/copilot.vim" },
@@ -677,6 +678,8 @@ require("lazy").setup({
     end,
   },
 
+  { "nvim-treesitter/nvim-treesitter-textobjects", },
+
   {
     'nvim-treesitter/nvim-treesitter-context',
     opts = {
@@ -688,10 +691,13 @@ require("lazy").setup({
       separator = nil,
       zindex = 20,
       on_attach = nil,
-    }
+    },
+    config = function()
+      vim.api.nvim_set_keymap('n', '<leader>cc', '<cmd>TSContextToggle<CR>',
+        { noremap = true, desc = 'Toggle [C]ode [C]ontext' })
+    end
   },
 
-  -- require 'kickstart.plugins.lint',
   { import = "custom.plugins" },
 }, {
   ui = {
