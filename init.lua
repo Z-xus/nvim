@@ -116,28 +116,25 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- [[ Basic Autocommands ]]
 
-vim.api.nvim_set_hl(0, "YankNormal", { bg = "#A6B1E1", fg = "#424874" })    -- Blue
-vim.api.nvim_set_hl(0, "YankClipboard", { bg = "#BBDED6", fg = "#1A5319" }) -- Green
--- vim.api.nvim_set_hl(0, "YankClipboard", { bg = "#95D2B3", fg = "#1A5319" }) -- Green
--- vim.api.nvim_set_hl(0, "YankNormal", { bg = "#C8A1E0", fg = "#674188" })    -- Purple
-
+-- Define custom highlight groups using Neovim's Lua API
+vim.api.nvim_set_hl(0, "YankClipboard", { bg = "#95D2B3", fg = "#1A5319" }) -- Green background for clipboard yanks
+vim.api.nvim_set_hl(0, "YankNormal", { bg = "#C8A1E0", fg = "#674188" })    -- Purple background for normal yanks
 
 -- Function to highlight yank based on clipboard usage
 local function highlight_yank()
   if vim.v.event.regname == "+" then
-    vim.highlight.on_yank({ higroup = "YankClipboard", timeout = 200 })
+    vim.highlight.on_yank({ higroup = "YankClipboard" })
   else
-    vim.highlight.on_yank({ higroup = "YankNormal", timeout = 200 })
+    vim.highlight.on_yank({ higroup = "YankNormal" })
   end
 end
 
 -- Define the yank autocmd
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copying) text",
-  group = vim.api.nvim_create_augroup("custom-highlight-yank", { clear = true }),
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
   callback = highlight_yank,
 })
-
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -159,27 +156,28 @@ require("lazy").setup({
 
   -- Color schemes
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-      -- Lua
-      require('onedark').setup {
-        style = 'deep'
-      }
-      require('onedark').load()
-    end,
-  },
   -- {
-  --   "folke/tokyonight.nvim",
-  --   lazy = false,
+  --   -- Theme inspired by Atom
+  --   'navarasu/onedark.nvim',
   --   priority = 1000,
   --   config = function()
-  --     vim.cmd.colorscheme("tokyonight-night")
+  --     vim.cmd.colorscheme 'onedark'
+  --     -- Lua
+  --     require('onedark').setup {
+  --       style = 'deep'
+  --     }
+  --     require('onedark').load()
   --   end,
   -- },
+
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme("tokyonight-night")
+    end,
+  },
 
   -- {
   --   "Shatur/neovim-ayu",
