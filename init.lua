@@ -11,7 +11,7 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.signcolumn = "yes"
-vim.opt.updatetime = 250
+vim.opt.updatetime = 1000 -- 250
 vim.opt.inccommand = "split"
 vim.o.termguicolors = true
 vim.opt.colorcolumn = nil
@@ -471,6 +471,11 @@ require("lazy").setup({
             "--offset-encoding=utf-16",
           }
         },
+        emmet_ls = {},
+        jsonls = {},
+        pylsp = {},
+        tailwindcss = {},
+        tsserver = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -480,7 +485,6 @@ require("lazy").setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
         --
 
         lua_ls = {
