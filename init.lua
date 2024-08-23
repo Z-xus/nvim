@@ -31,7 +31,7 @@ vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
 -- Fold
-vim.wo.foldmethod = "indent"
+-- vim.wo.foldmethod = "indent"
 vim.wo.foldenable = false
 
 -- Delete file content
@@ -42,6 +42,11 @@ vim.api.nvim_set_keymap('n', '<C-s>', ':w<CR>', { noremap = true, silent = true 
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+-- FIXME: :w = :W and :q = :Q -- Laptop key delay
+vim.api.nvim_create_user_command('W', 'w', {})
+vim.api.nvim_create_user_command('Q', 'q', {})
+
+
 -- Open split
 
 -- Copy line to system clipboard
@@ -50,10 +55,6 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], { noremap = true, silent = true })    
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = true }) -- Delete line to system clipboard
 vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true })        -- Paste on new line below
 vim.keymap.set("n", "ya", [[gg"+yG<C-o>zz]], { noremap = true, silent = true })       -- Yank full file to system clipboard
-
--- Move line
-vim.keymap.set({ "n", "v" }, "<A-j>", [[:m '>+1<CR>gv=gv]])
-vim.keymap.set({ "n", "v" }, "<A-k>", [[:m '>-2<CR>gv=gv]])
 
 -- Change Directory
 vim.keymap.set('n', '<A-c>', ':cd %:p:h<CR>:pwd<CR>', { noremap = true, silent = false })
@@ -81,8 +82,8 @@ endfunction
 
 vim.cmd("set foldtext=FoldText()")
 vim.cmd("set fillchars=fold:\\ ")
--- vim.wo.foldmethod = "expr"
--- vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+vim.wo.foldmethod = "expr"
+vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 
 -- Decrease mapped sequence wait time - Displays which-key popup sooner
 vim.opt.timeoutlen = 300
@@ -218,9 +219,6 @@ require("lazy").setup({
   -- no more skill issues
   -- { "github/copilot.vim" },
 
-  -- TODO: add something like this
-  -- { "MeanderingProgrammer/markdown.nvim",  opts = {} },
-
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     "lewis6991/gitsigns.nvim",
@@ -229,7 +227,9 @@ require("lazy").setup({
 
   {
     "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    opts = {
+      focus = true
+    },
     cmd = "Trouble",
     keys = {
       {
