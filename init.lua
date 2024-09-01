@@ -57,6 +57,9 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = tr
 vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true }) -- Paste on new line below
 vim.keymap.set("n", "ya", [[gg"+yG<C-o>zz]], { noremap = true, silent = true }) -- Yank full file to system clipboard
 
+vim.keymap.set("n", "<leader>cx", "<cmd>!chmod +x %<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<C-f>", ":silent !tmux neww tmux-sessionizer<CR>", { noremap = true, silent = true })
+
 -- Change Directory
 vim.keymap.set("n", "<A-c>", ":cd %:p:h<CR>:pwd<CR>", { noremap = true, silent = false })
 
