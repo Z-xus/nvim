@@ -57,6 +57,10 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = tr
 vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true }) -- Paste on new line below
 vim.keymap.set("n", "ya", [[gg"+yG<C-o>zz]], { noremap = true, silent = true }) -- Yank full file to system clipboard
 
+-- Move line
+vim.keymap.set({ "n", "v" }, "<A-j>", [[:m '>+1<CR>gv=gv]])
+vim.keymap.set({ "n", "v" }, "<A-k>", [[:m '>-2<CR>gv=gv]])
+
 -- Change Directory
 vim.keymap.set("n", "<A-c>", ":cd %:p:h<CR>:pwd<CR>", { noremap = true, silent = false })
 
@@ -217,7 +221,7 @@ require("lazy").setup({
 	{ "numToStr/Comment.nvim" },
 
 	-- no more skill issues
-	-- { "github/copilot.vim" },
+	{ "github/copilot.vim" },
 
 	{
 		-- Adds git related signs to the gutter, as well as utilities for managing changes
