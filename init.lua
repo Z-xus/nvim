@@ -56,6 +56,7 @@ vim.keymap.set("n", "<leader>Y", [["+Y]], { noremap = true, silent = true }) -- 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = true }) -- Delete line to system clipboard
 vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true }) -- Paste on new line below
 vim.keymap.set("n", "ya", [[gg"+yG<C-o>zz]], { noremap = true, silent = true }) -- Yank full file to system clipboard
+vim.keymap.set("n", "<leader>p", [["+p]], { noremap = true, silent = true }) -- Paste from system clipboard after the cursor
 
 -- Move line
 vim.keymap.set({ "n", "v" }, "<A-j>", [[:m '>+1<CR>gv=gv]])
@@ -153,11 +154,23 @@ vim.opt.rtp:prepend(lazypath)
 -- [[ Configure and install plugins ]]
 
 require("lazy").setup({
+
+	-- { "stackmap.nvim", dir = "/home/neon/Personal/stackmap.nvim", lazy = false },
+	{ "Z-xus/stackmap.nvim", lazy = false },
+
 	-- Detect tabstop and shiftwidth automatically
 	{ "tpope/vim-sleuth" },
 
 	-- Use treesitter to auto close and auto rename html tag (Can't find anything better at the moment)
 	{ "windwp/nvim-ts-autotag", opts = {} },
+
+	{
+		"mbbill/undotree",
+		opts = {},
+		config = function()
+			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
+		end,
+	},
 
 	-- Color schemes
 
@@ -173,6 +186,15 @@ require("lazy").setup({
 	--     }
 	--     require('onedark').load()
 	--   end,
+	-- },
+
+	-- {
+	-- 	"Z-xus/tokyonight-ayu.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("tokyonight-night")
+	-- 	end,
 	-- },
 
 	{
@@ -297,20 +319,35 @@ require("lazy").setup({
 		"folke/which-key.nvim",
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
 		config = function()
-			require("which-key").setup()
-
-			require("which-key").register({
-				["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-				["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-				["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-				["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-				["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
-				["<leader>t"] = { name = "[T]rouble", _ = "which_key_ignore" },
-				["<leader>g"] = { name = "[G]it Hunk", _ = "which_key_ignore" },
+			local wk = require("which-key")
+			wk.add({
+				{ "<leader>c", group = "[C]ode" },
+				{ "<leader>c_", hidden = true },
+				{ "<leader>d", group = "[D]ocument" },
+				{ "<leader>d_", hidden = true },
+				{ "<leader>g", group = "[G]it Hunk" },
+				{ "<leader>g_", hidden = true },
+				{ "<leader>r", group = "[R]ename" },
+				{ "<leader>r_", hidden = true },
+				{ "<leader>s", group = "[S]earch" },
+				{ "<leader>s_", hidden = true },
+				{ "<leader>t", group = "[T]rouble" },
+				{ "<leader>t_", hidden = true },
+				{ "<leader>w", group = "[W]orkspace" },
+				{ "<leader>w_", hidden = true },
 			})
-			require("which-key").register({
-				["<leader>g"] = { "[G]it Hunk" },
-			}, { mode = "v" })
+			-- require("which-key").register({
+			-- 	["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
+			-- 	["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
+			-- 	["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
+			-- 	["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
+			-- 	["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
+			-- 	["<leader>t"] = { name = "[T]rouble", _ = "which_key_ignore" },
+			-- 	["<leader>g"] = { name = "[G]it Hunk", _ = "which_key_ignore" },
+			-- })
+			-- require("which-key").register({
+			-- 	["<leader>g"] = { "[G]it Hunk" },
+			-- }, { mode = "v" })
 		end,
 	},
 
@@ -476,7 +513,7 @@ require("lazy").setup({
 				jsonls = {},
 				pylsp = {},
 				tailwindcss = {},
-				tsserver = {},
+				ts_ls = {},
 				-- gopls = {},
 				-- pyright = {},
 				-- rust_analyzer = {},
@@ -531,8 +568,7 @@ require("lazy").setup({
 		opts = {
 			notify_on_error = false,
 			format_on_save = function(bufnr)
-				local disable_filetypes = {}
-				-- local disable_filetypes = { c = true, cpp = true }
+				local disable_filetypes = { c = true, cpp = true }
 				return {
 					timeout_ms = 500,
 					lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -581,7 +617,7 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		opts = {
-			ensure_installed = { "bash", "c", "html", "lua", "luadoc", "markdown", "vim", "vimdoc" },
+			ensure_installed = { "bash", "c", "cpp", "html", "lua", "luadoc", "markdown", "vim", "vimdoc" },
 			auto_install = true,
 			highlight = {
 				enable = true,
