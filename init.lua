@@ -121,6 +121,12 @@ vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagn
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
+-- Diagnotic signs
+vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
+
 -- [[ Basic Autocommands ]]
 
 -- Define custom highlight groups using Neovim's Lua API
@@ -164,11 +170,27 @@ require("lazy").setup({
 	-- Use treesitter to auto close and auto rename html tag (Can't find anything better at the moment)
 	{ "windwp/nvim-ts-autotag", opts = {} },
 
+	{ "echasnovski/mini.indentscope", version = "*", opts = { symbol = "▏" } },
+
 	{
 		"mbbill/undotree",
 		opts = {},
 		config = function()
 			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
+		end,
+	},
+
+	{
+		"Bekaboo/dropbar.nvim",
+		name = "dropbar",
+		keys = {
+			vim.keymap.set("n", "<leader>b", function()
+				require("dropbar.api").pick(vim.v.count ~= 0 and vim.v.count)
+			end, { desc = "Toggle dropbar menu" }),
+		},
+		event = { "BufReadPost", "BufNewFile" },
+		config = function()
+			require("dropbar").setup()
 		end,
 	},
 
@@ -188,21 +210,13 @@ require("lazy").setup({
 	--   end,
 	-- },
 
-	-- {
-	-- 	"Z-xus/tokyonight-ayu.nvim",
-	-- 	lazy = false,
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.cmd.colorscheme("tokyonight-night")
-	-- 	end,
-	-- },
-
 	{
 		"folke/tokyonight.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
 			vim.cmd.colorscheme("tokyonight-night")
+			vim.cmd.hi("Comment gui=none")
 		end,
 	},
 
@@ -248,7 +262,26 @@ require("lazy").setup({
 	{
 		-- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
-		opts = {},
+		config = function()
+			require("gitsigns").setup({
+				signs = {
+					add = { text = "" },
+					change = { text = "" },
+					delete = { text = "" },
+					topdelete = { text = "▲" },
+					changedelete = { text = "" },
+					untracked = { text = "" },
+				},
+				signs_staged = {
+					add = { text = "" },
+					change = { text = "" },
+					delete = { text = "" },
+					topdelete = { text = "" },
+					changedelete = { text = "" },
+					untracked = { text = "" },
+				},
+			})
+		end,
 	},
 
 	{
