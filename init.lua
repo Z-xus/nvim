@@ -162,7 +162,15 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 
 	-- { "stackmap.nvim", dir = "/home/neon/Personal/stackmap.nvim", lazy = false },
-	{ "Z-xus/stackmap.nvim", lazy = false },
+	-- { "Z-xus/stackmap.nvim", lazy = false },
+
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		ft = "markdown",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+		},
+	},
 
 	-- Detect tabstop and shiftwidth automatically
 	{ "tpope/vim-sleuth" },
@@ -254,9 +262,21 @@ require("lazy").setup({
 		opts = {},
 	},
 
-	{ "numToStr/Comment.nvim" },
+	-- { "numToStr/Comment.nvim" },
+	{
+		"echasnovski/mini.comment",
+		version = "*",
+		opts = {
+			options = {
+				custom_commentstring = function()
+					if vim.bo.filetype == "sql" then
+						return "-- %s"
+					end
+				end,
+			},
+		},
+	},
 
-	-- no more skill issues
 	{ "github/copilot.vim" },
 
 	{
