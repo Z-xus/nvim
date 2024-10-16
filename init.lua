@@ -52,10 +52,10 @@ vim.api.nvim_set_keymap("n", "<leader>m", "<cmd>Mason<CR>", { noremap = true, si
 
 -- Copy line to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { noremap = true, silent = true }) -- Yank to the system clipboard ("+y)
-vim.keymap.set("n", "<leader>Y", [["+Y]], { noremap = true, silent = true }) -- Yank line to system clipboard
+-- vim.keymap.set("n", "<leader>Y", [["+Y]], { noremap = true, silent = true }) -- Yank line to system clipboard
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = true }) -- Delete line to system clipboard
 vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true }) -- Paste on new line below
-vim.keymap.set("n", "ya", [[gg"+yG<C-o>zz]], { noremap = true, silent = true }) -- Yank full file to system clipboard
+vim.keymap.set("n", "yf", [[gg"+yG<C-o>zz]], { noremap = true, silent = true }) -- Yank full file to system clipboard
 vim.keymap.set("n", "<leader>p", [["+p]], { noremap = true, silent = true }) -- Paste from system clipboard after the cursor
 
 -- Move line
@@ -116,10 +116,10 @@ vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous Diagnostic message" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next Diagnostic message" })
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic Error messages" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic Quickfix list" })
 
 -- Diagnotic signs
 vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
@@ -280,31 +280,6 @@ require("lazy").setup({
 	{ "github/copilot.vim" },
 
 	{
-		-- Adds git related signs to the gutter, as well as utilities for managing changes
-		"lewis6991/gitsigns.nvim",
-		config = function()
-			require("gitsigns").setup({
-				signs = {
-					add = { text = "" },
-					change = { text = "" },
-					delete = { text = "" },
-					topdelete = { text = "▲" },
-					changedelete = { text = "" },
-					untracked = { text = "" },
-				},
-				signs_staged = {
-					add = { text = "" },
-					change = { text = "" },
-					delete = { text = "" },
-					topdelete = { text = "" },
-					changedelete = { text = "" },
-					untracked = { text = "" },
-				},
-			})
-		end,
-	},
-
-	{
 		"folke/trouble.nvim",
 		opts = {
 			focus = true,
@@ -370,38 +345,53 @@ require("lazy").setup({
 
 	{
 		"folke/which-key.nvim",
-		event = "VimEnter", -- Sets the loading event to 'VimEnter'
-		config = function()
-			local wk = require("which-key")
-			wk.add({
-				{ "<leader>c", group = "[C]ode" },
-				{ "<leader>c_", hidden = true },
-				{ "<leader>d", group = "[D]ocument" },
-				{ "<leader>d_", hidden = true },
-				{ "<leader>g", group = "[G]it Hunk" },
-				{ "<leader>g_", hidden = true },
-				{ "<leader>r", group = "[R]ename" },
-				{ "<leader>r_", hidden = true },
-				{ "<leader>s", group = "[S]earch" },
-				{ "<leader>s_", hidden = true },
-				{ "<leader>t", group = "[T]rouble" },
-				{ "<leader>t_", hidden = true },
-				{ "<leader>w", group = "[W]orkspace" },
-				{ "<leader>w_", hidden = true },
-			})
-			-- require("which-key").register({
-			-- 	["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-			-- 	["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-			-- 	["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-			-- 	["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-			-- 	["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
-			-- 	["<leader>t"] = { name = "[T]rouble", _ = "which_key_ignore" },
-			-- 	["<leader>g"] = { name = "[G]it Hunk", _ = "which_key_ignore" },
-			-- })
-			-- require("which-key").register({
-			-- 	["<leader>g"] = { "[G]it Hunk" },
-			-- }, { mode = "v" })
-		end,
+		event = "VimEnter",
+		opts = {
+			icons = {
+				mappings = vim.g.have_nerd_font,
+				keys = vim.g.have_nerd_font and {} or {
+					Up = "<Up> ",
+					Down = "<Down> ",
+					Left = "<Left> ",
+					Right = "<Right> ",
+					C = "<C-…> ",
+					M = "<M-…> ",
+					D = "<D-…> ",
+					S = "<S-…> ",
+					CR = "<CR> ",
+					Esc = "<Esc> ",
+					ScrollWheelDown = "<ScrollWheelDown> ",
+					ScrollWheelUp = "<ScrollWheelUp> ",
+					NL = "<NL> ",
+					BS = "<BS> ",
+					Space = "<Space> ",
+					Tab = "<Tab> ",
+					F1 = "<F1>",
+					F2 = "<F2>",
+					F3 = "<F3>",
+					F4 = "<F4>",
+					F5 = "<F5>",
+					F6 = "<F6>",
+					F7 = "<F7>",
+					F8 = "<F8>",
+					F9 = "<F9>",
+					F10 = "<F10>",
+					F11 = "<F11>",
+					F12 = "<F12>",
+				},
+			},
+
+			-- Document existing key chains
+			spec = {
+				{ "<leader>c", group = "Code", mode = { "n", "x" } },
+				{ "<leader>d", group = "Document" },
+				{ "<leader>r", group = "Rename" },
+				{ "<leader>s", group = "Search" },
+				{ "<leader>w", group = "Workspace" },
+				{ "<leader>t", group = "Toggle" },
+				{ "<leader>h", group = "Git Hunk", mode = { "n", "v" } },
+			},
+		},
 	},
 
 	{
@@ -451,22 +441,22 @@ require("lazy").setup({
 			pcall(require("telescope").load_extension, "ui-select")
 
 			local builtin = require("telescope.builtin")
-			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-			vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
+			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search Keymaps" })
+			vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "Search Files" })
+			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "Search Select Telescope" })
+			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "Search current Word" })
+			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "Search by Grep" })
+			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "Search Diagnostics" })
+			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "Search Resume" })
+			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = 'Search Recent Files ("." for repeat)' })
+			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "Find existing buffers" })
 
 			vim.keymap.set(
 				"n",
 				"<leader>/",
 				builtin.current_buffer_fuzzy_find,
-				{ desc = "[/] Fuzzily search in current buffer" }
+				{ desc = "/ Fuzzily search in current buffer" }
 			)
 
 			vim.keymap.set("n", "<leader>s/", function()
@@ -474,11 +464,11 @@ require("lazy").setup({
 					grep_open_files = true,
 					prompt_title = "Live Grep in Open Files",
 				})
-			end, { desc = "[S]earch [/] in Open Files" })
+			end, { desc = "Search / in Open Files" })
 
 			vim.keymap.set("n", "<leader>sn", function()
 				builtin.find_files({ cwd = vim.fn.stdpath("config") })
-			end, { desc = "[S]earch [N]eovim files" })
+			end, { desc = "Search Neovim files" })
 		end,
 	},
 
@@ -500,20 +490,16 @@ require("lazy").setup({
 					local map = function(keys, func, desc)
 						vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 					end
-					map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-					map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-					map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-					map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
-					map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-					map(
-						"<leader>ws",
-						require("telescope.builtin").lsp_dynamic_workspace_symbols,
-						"[W]orkspace [S]ymbols"
-					)
-					map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-					map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+					map("gd", require("telescope.builtin").lsp_definitions, "Goto Definition")
+					map("gr", require("telescope.builtin").lsp_references, "Goto References")
+					map("gI", require("telescope.builtin").lsp_implementations, "Goto Implementation")
+					map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type Definition")
+					map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "Document Symbols")
+					map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Workspace Symbols")
+					map("<leader>rn", vim.lsp.buf.rename, "Rename")
+					map("<leader>ca", vim.lsp.buf.code_action, "Code Action")
 					map("K", vim.lsp.buf.hover, "Hover Documentation")
-					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+					map("gD", vim.lsp.buf.declaration, "Goto Declaration")
 
 					-- The following two autocommands are used to highlight references of the
 					-- word under your cursor when your cursor rests there for a little while.
@@ -615,7 +601,7 @@ require("lazy").setup({
 					require("conform").format({ async = true, lsp_fallback = true })
 				end,
 				mode = "",
-				desc = "[F]ormat buffer",
+				desc = "Format buffer",
 			},
 		},
 		opts = {
@@ -782,7 +768,7 @@ require("lazy").setup({
 				"n",
 				"<leader>cc",
 				"<cmd>TSContextToggle<CR>",
-				{ noremap = true, desc = "Toggle [C]ode [C]ontext" }
+				{ noremap = true, desc = "Toggle Code Context" }
 			)
 
 			-- Get the current highlight properties of 'CursorLine'
