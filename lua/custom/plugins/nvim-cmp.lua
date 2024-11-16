@@ -77,18 +77,19 @@ local cp_snippet = function()
 				"#define gcd(a, b) __gcd(a, b);",
 				"",
 
-				"#define in(x) cin >> x;",
-				"#define in2(x, y) cin >> x >> y;",
-				"#define in3(x, y, z) cin >> x >> y >> z;",
+				"#define in(x) cin >> x",
+				"#define in2(x, y) cin >> x >> y",
+				"#define in3(x, y, z) cin >> x >> y >> z",
 				"",
 
-				"#define out(x) cout << x;",
-				"#define out2(x, y) cout << x << ' ' << y;",
-				"#define out3(x, y, z) cout << x << ' ' << y << ' ' << z;",
+				"#define out(x) cout << x",
+				"#define outsp(x) cout << x << ' '",
+				"#define out2(x, y) cout << x << ' ' << y",
+				"#define out3(x, y, z) cout << x << ' ' << y << ' ' << z",
 				"",
 
-				"#define line cout << endl;",
-				"#define string_in(x) getline(cin, x);",
+				"#define line cout << endl",
+				"#define string_in(x) getline(cin, x)",
 				"",
 
 				"typedef vector<int> vi;",
@@ -192,6 +193,9 @@ return {
 				format = function(_, vim_item)
 					local kind_symbol = cmp_kinds[vim_item.kind] or ""
 					local kind_text = vim_item.kind
+					if kind_text == nil then
+						kind_text = ""
+					end
 					vim_item.kind = " " .. kind_symbol .. kind_text .. " "
 					vim_item.menu = "    (" .. kind_text .. ")"
 					return vim_item
