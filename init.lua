@@ -256,14 +256,14 @@ require("lazy").setup({
 
 	-- { "ThePrimeagen/vim-be-good" },
 
-	{
-		-- Line indent markers
-		"lukas-reineke/indent-blankline.nvim",
-		main = "ibl",
-		---@module "ibl"
-		---@type ibl.config
-		opts = {},
-	},
+	-- {
+	-- 	-- Line indent markers
+	-- 	"lukas-reineke/indent-blankline.nvim",
+	-- 	main = "ibl",
+	-- 	---@module "ibl"
+	-- 	---@type ibl.config
+	-- 	opts = {},
+	-- },
 
 	-- { "numToStr/Comment.nvim" },
 	{
@@ -594,14 +594,19 @@ require("lazy").setup({
 		end,
 	},
 
-	{ -- Autoformat
+	{
+		-- Autoformat
 		"stevearc/conform.nvim",
 		lazy = false,
 		keys = {
 			{
 				"<a-f>",
 				function()
-					require("conform").format({ async = true, lsp_fallback = true })
+					require("conform").format({
+						async = true,
+						lsp_fallback = true,
+						stop_after_first = true,
+					})
 				end,
 				mode = "",
 				desc = "Format buffer",
@@ -620,12 +625,11 @@ require("lazy").setup({
 				lua = { "stylua" },
 				python = { "black" },
 				cpp = { "clang-format" },
-				javascript = { { "prettierd", "prettier" } },
+				javascript = { "prettierd", "prettier" }, -- Stop after first by default here
 			},
 		},
 	},
 
-	-- Highlight todo, notes, etc in comments
 	{
 		"folke/todo-comments.nvim",
 		event = "VimEnter",
