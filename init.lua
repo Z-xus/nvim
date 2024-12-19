@@ -622,6 +622,7 @@ require("lazy").setup({
 				}
 			end,
 			formatters_by_ft = {
+				html = { "prettierd", "prettier" },
 				lua = { "stylua" },
 				python = { "black" },
 				cpp = { "clang-format" },
