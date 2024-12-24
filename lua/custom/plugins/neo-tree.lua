@@ -4,6 +4,7 @@
 return {
 	"nvim-neo-tree/neo-tree.nvim",
 	version = "*",
+	event = "VimEnter",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -73,6 +74,7 @@ return {
 				width = 30,
 				mappings = {
 					["\\"] = "close_window",
+					["v"] = "open_vsplit",
 				},
 			},
 		},
