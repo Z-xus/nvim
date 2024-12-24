@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = ";"
 vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -103,8 +103,17 @@ vim.opt.splitbelow = true
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 vim.opt.list = true
-vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
+-- vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
 
+vim.opt.showbreak = "⤷  " -- ↪	⤷
+vim.opt.listchars = {
+	tab = "  ",
+	extends = "⟫",
+	precedes = "⟪",
+	conceal = "",
+	nbsp = "␣",
+	trail = "·",
+}
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 vim.opt.cursorline = true
@@ -168,6 +177,12 @@ require("lazy").setup({
 	-- { "Z-xus/stackmap.nvim", lazy = false },
 
 	{
+		"folke/ts-comments.nvim",
+		event = "VeryLazy",
+		opts = {},
+	},
+
+	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		ft = "markdown",
 		dependencies = {
@@ -182,6 +197,30 @@ require("lazy").setup({
 	{ "windwp/nvim-ts-autotag", opts = {} },
 
 	{ "echasnovski/mini.indentscope", version = "*", opts = { symbol = "▏" } },
+
+	-- Search/replace in multiple files
+	{
+		"MagicDuck/grug-far.nvim",
+		cmd = "GrugFar",
+		opts = { headerMaxWidth = 80 },
+		keys = {
+			{
+				"<leader>f",
+				function()
+					local grug = require("grug-far")
+					local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+					grug.open({
+						transient = true,
+						prefills = {
+							filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+						},
+					})
+				end,
+				mode = { "n", "v" },
+				desc = "Search and Replace",
+			},
+		},
+	},
 
 	{
 		"mbbill/undotree",
@@ -419,6 +458,20 @@ require("lazy").setup({
 					layout_config = {
 						vertical = { height = 0.5 },
 					},
+
+					-- TODO: Fix this
+					-- path_display = function(_, path)
+					-- 	local tail = vim.fs.basename(path) -- Get the file name
+					-- 	local parent = vim.fs.dirname(path) -- Get the parent directory
+					--
+					-- 	if parent == "." then
+					-- 		return tail -- If no parent, return only the file name
+					-- 	end
+					--
+					-- 	-- Return the formatted string with the file name and parent directory
+					-- 	return string.format("%s • %s", tail, parent)
+					-- end,
+
 					mappings = {
 						i = {
 							["<C-u>"] = false,
