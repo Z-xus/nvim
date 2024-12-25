@@ -126,11 +126,14 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+vim.keymap.set("n", "<C-c>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous Diagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next Diagnostic message" })
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic Error messages" })
+vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
+vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
+-- vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic Error messages" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic Quickfix list" })
 
 -- Diagnotic signs
@@ -246,51 +249,95 @@ require("lazy").setup({
 
 	-- Color schemes
 
-	-- {
-	--   -- Theme inspired by Atom
-	--   'navarasu/onedark.nvim',
-	--   priority = 1000,
-	--   config = function()
-	--     vim.cmd.colorscheme 'onedark'
-	--     -- Lua
-	--     require('onedark').setup {
-	--       style = 'deep'
-	--     }
-	--     require('onedark').load()
-	--   end,
-	-- },
-
 	{
-		"folke/tokyonight.nvim",
-		lazy = false,
+		"catppuccin/nvim",
+		name = "catppuccin",
 		priority = 1000,
+		opts = {
+			term_colors = true,
+			compile_path = vim.fn.stdpath("cache") .. "/catppuccin",
+
+			integrations = {
+				dropbar = {
+					enabled = false,
+					color_mode = true, -- enable color for kind's texts, not just kind's icons
+				},
+				native_lsp = {
+					enabled = true,
+					virtual_text = {
+						errors = { "italic" },
+						hints = { "italic" },
+						warnings = { "italic" },
+						information = { "italic" },
+						ok = { "italic" },
+					},
+					inlay_hints = {
+						background = true,
+					},
+				},
+				grug_far = true,
+				harpoon = true,
+				cmp = true,
+				copilot_vim = true,
+				render_markdown = true,
+				which_key = true,
+				telescope = {
+					enabled = true,
+					style = "nvchad",
+				},
+			},
+		},
 		config = function()
-			vim.cmd.colorscheme("tokyonight-night")
-			vim.cmd.hi("Comment gui=none")
+			vim.cmd.colorscheme("catppuccin-mocha")
 		end,
 	},
 
 	-- {
-	--   "Shatur/neovim-ayu",
-	--   lazy = false,
-	--   priority = 1000,
-	--   opts = {
-	--     overrides = {
-	--       Normal = { bg = "None" },
-	--       ColorColumn = { bg = "None" },
-	--       SignColumn = { bg = "None" },
-	--       Folded = { bg = "None" },
-	--       FoldColumn = { bg = "None" },
-	--       CursorLine = { bg = "None" },
-	--       CursorColumn = { bg = "None" },
-	--       WhichKeyFloat = { bg = "None" },
-	--       VertSplit = { bg = "None" },
-	--     },
-	--   },
-	--   config = function()
-	--     vim.cmd([[colorscheme ayu]])
-	--     vim.g.ayucolor = "dark"
-	--   end,
+	-- 	-- Theme inspired by Atom
+	-- 	"navarasu/onedark.nvim",
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("onedark")
+	-- 		-- Lua
+	-- 		require("onedark").setup({
+	-- 			style = "dark",
+	-- 		})
+	-- 		require("onedark").load()
+	-- 	end,
+	-- },
+
+	-- {
+	-- 	"folke/tokyonight.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.cmd.colorscheme("tokyonight-night")
+	-- 		-- vim.cmd.hi("Comment gui=none")
+	-- 	end,
+	-- },
+
+	-- {
+	-- 	"Shatur/neovim-ayu",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	opts = {
+	-- 		overrides = {
+	-- 			Normal = { bg = "None" },
+	-- 			ColorColumn = { bg = "None" },
+	-- 			SignColumn = { bg = "None" },
+	-- 			Folded = { bg = "None" },
+	-- 			FoldColumn = { bg = "None" },
+	-- 			CursorLine = { bg = "None" },
+	-- 			CursorColumn = { bg = "None" },
+	-- 			WhichKeyFloat = { bg = "None" },
+	-- 			VertSplit = { bg = "None" },
+	-- 		},
+	-- 	},
+	-- 	config = function()
+	-- 		-- vim.cmd([[colorscheme ayu]])
+	-- 		-- vim.g.ayucolor = "dark"
+	-- 		vim.cmd.colorscheme("ayu-mirage")
+	-- 	end,
 	-- },
 
 	-- { "ThePrimeagen/vim-be-good" },
@@ -319,7 +366,7 @@ require("lazy").setup({
 		},
 	},
 
-	{ "github/copilot.vim" },
+	-- { "github/copilot.vim" },
 
 	{
 		"folke/trouble.nvim",
