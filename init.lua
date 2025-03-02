@@ -51,12 +51,23 @@ vim.api.nvim_set_keymap("n", "<leader>m", "<cmd>Mason<CR>", { noremap = true, si
 -- Open split
 
 -- Copy line to system clipboard
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { noremap = true, silent = true }) -- Yank to the system clipboard ("+y)
--- vim.keymap.set("n", "<leader>Y", [["+Y]], { noremap = true, silent = true }) -- Yank line to system clipboard
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = true }) -- Delete line to system clipboard
-vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true }) -- Paste on new line below
-vim.keymap.set("n", "yf", [[gg"+yG<C-o>zz]], { noremap = true, silent = true }) -- Yank full file to system clipboard
-vim.keymap.set("n", "<leader>p", [["+p]], { noremap = true, silent = true }) -- Paste from system clipboard after the cursor
+-- Yank to the system clipboard ("+y)
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { noremap = true, silent = true })
+
+-- -- Yank line to system clipboard
+-- vim.keymap.set("n", "<leader>Y", [["+Y]], { noremap = true, silent = true })
+
+-- Delete line to system clipboard
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { noremap = true, silent = true })
+
+-- Paste on new line below
+vim.keymap.set("n", "<C-p>", [[o<ESC>"+p]], { noremap = true, silent = true })
+
+-- Yank full file to system clipboard
+vim.keymap.set("n", "yf", [[gg"+yG<C-o>zz]], { noremap = true, silent = true })
+
+-- Paste from system clipboard after the cursor
+vim.keymap.set("n", "<leader>p", [["+p]], { noremap = true, silent = true })
 
 -- Move line
 vim.keymap.set({ "n", "v" }, "<A-j>", [[:m '>+1<CR>gv=gv]])
@@ -653,11 +664,11 @@ require("lazy").setup({
 				},
 				emmet_ls = {},
 				jsonls = {},
-				pylsp = {},
+				-- pylsp = {},
 				tailwindcss = {},
 				ts_ls = {},
 				-- gopls = {},
-				-- pyright = {},
+				pyright = {},
 				-- rust_analyzer = {},
 
 				lua_ls = {
