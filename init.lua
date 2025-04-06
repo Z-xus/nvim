@@ -554,6 +554,8 @@ require("lazy").setup({
 			pcall(require("telescope").load_extension, "fzf")
 			pcall(require("telescope").load_extension, "ui-select")
 
+			require("custom.utils.telescope-multigrep").setup()
+
 			local builtin = require("telescope.builtin")
 			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
 			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search Keymaps" })
