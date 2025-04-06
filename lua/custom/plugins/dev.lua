@@ -7,6 +7,15 @@ return {
 			require("present")
 		end,
 	},
+
+	{
+		dir = "~/Projects/dsa_io.nvim",
+		lazy = false,
+		config = function()
+			require("dsa_io").setup()
+		end,
+	},
+
 	{
 		-- dir = "~/Personal/float.nvim",
 		-- TODO: 1. Infinite output hangs the buffer
