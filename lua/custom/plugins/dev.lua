@@ -4,7 +4,10 @@ return {
 		dir = "~/Projects/present.nvim",
 		lazy = false,
 		config = function()
-			require("present")
+			-- require("present")
+			vim.keymap.set("n", "<leader>ps", function()
+				require("present").start_presentation()
+			end, { desc = "Start presentation", silent = true })
 		end,
 	},
 
